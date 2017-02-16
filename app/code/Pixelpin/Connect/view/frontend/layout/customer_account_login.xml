@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"> 
+    <head>
+        <css src="Pixelpin_Connect::pixelpin_connect/css/styles.css"/>
+        <css src="Pixelpin_Connect::pixelpin_connect/pixelpin/css/button.css"/>
+    </head>
+    <body>
+        <referenceContainer name="customer.login.container">
+        <block class="Pixelpin\Connect\Block\Login" name="pixelpin_connect_login" template="Pixelpin_Connect::login.phtml" cacheable="false">
+            <block class="Pixelpin\Connect\Block\Pixelpin\Button" name="pixelpin_connect_login_button" template="Pixelpin_Connect::loginbutton.phtml" cacheable="false"/>
+        </block>  
+        </referenceContainer>
+    </body>
+</page>

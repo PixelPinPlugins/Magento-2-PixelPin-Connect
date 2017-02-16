@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>PixelPin Connect</title>
+        <css src="Pixelpin_Connect::pixelpin_connect/css/styles.css"/>
+    </head>
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Pixelpin\Connect\Block\Pixelpin\Account" name="pixelpin_connect_pixelpin_account" template="Pixelpin_Connect::account.phtml" cacheable="false">
+                <block class="Pixelpin\Connect\Block\Pixelpin\Button" name="pixelpin_connect_account_pixelpin_button" template="Pixelpin_Connect::button.phtml" cacheable="false"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

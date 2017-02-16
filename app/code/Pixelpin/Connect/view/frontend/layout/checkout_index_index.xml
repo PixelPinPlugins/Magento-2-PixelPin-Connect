@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" >
+    <head>
+        <css src="Pixelpin_Connect::pixelpin_connect/css/styles.css"/>
+        <css src="Pixelpin_Connect::pixelpin_connect/pixelpin/css/button.css"/>
+        
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Pixelpin\Connect\Block\Checkout" name="pixelpin_connect_checkout" template="Pixelpin_Connect::checkout.phtml" cacheable="false" before="-">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+   <menu>
+       <add id="Pixelpin_Connect::pixelpin_connect" title="PixelPin Connect" module="Pixelpin_Connect" sortOrder="100" resource="Pixelpin_Connect::pixelpinlogin"/>
+       <add id="Pixelpin_Connect::settings" title="Settings" module="Pixelpin_Connect" sortOrder="50" parent="Pixelpin_Connect::pixelpin_connect" action="adminhtml/system_config/edit/section/pixelpinlogin" resource="Pixelpin_Connect::pixelpinlogin"/>
+   </menu>
+</config>
