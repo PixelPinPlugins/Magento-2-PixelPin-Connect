@@ -51,19 +51,15 @@ abstract class Account extends \Magento\Framework\App\Action\Action
      */
     protected $socialConnectPixelpinUserinfo;
 
-    protected $_logger;
-
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Registry $registry,
-        \PixelPin\Connect\Model\Pixelpin\Userinfo $socialConnectPixelpinUserinfo,
-        \Psr\Log\LoggerInterface $logger
+        \PixelPin\Connect\Model\Pixelpin\Userinfo $socialConnectPixelpinUserinfo
     ) {
         $this->customerSession = $customerSession;
         $this->registry = $registry;
         $this->socialConnectPixelpinUserinfo = $socialConnectPixelpinUserinfo;
-        $this->_logger = $logger;
         parent::__construct(
             $context
         );

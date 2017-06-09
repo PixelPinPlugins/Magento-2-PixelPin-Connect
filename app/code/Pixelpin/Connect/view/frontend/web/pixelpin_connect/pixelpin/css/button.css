@@ -46,13 +46,6 @@ div.pixelpin-connect-pixelpin-inner{
     text-align: center !important;
 }
 
-div.pixelpin-connect-pixelpin-right{
-    float: left !important;
-    height: 30px !important;
-    width: 3px !important;
-    background: transparent url('../images/login-button-right.png') no-repeat top left !important;
-}
-
 div.pixelpin-connect-pixelpin-inner a{
     color: #FFFFFF !important;
     padding: 0 !important;

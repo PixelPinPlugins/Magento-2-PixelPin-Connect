@@ -46,17 +46,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $cmsPageHelper;
 
-    protected $_logger;
-
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Cms\Helper\Page $cmsPageHelper,
-        \Psr\Log\LoggerInterface $logger
+        \Magento\Cms\Helper\Page $cmsPageHelper
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->cmsPageHelper = $cmsPageHelper;
-        $this->_logger = $logger;
         parent::__construct(
             $context
         );

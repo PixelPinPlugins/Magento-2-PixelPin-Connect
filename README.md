@@ -11,7 +11,7 @@ Features
 * Login using passwordless authentication using pictures.
 * Built in optional two factor.
 * Users can sign in and register using PixelPin.
-* PixelPin Auth is avaliable for free!
+* PixelPin Connect is avaliable for free!
 * Open Source.
 
 Installation Instructions

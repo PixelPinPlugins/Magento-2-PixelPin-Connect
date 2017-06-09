@@ -69,8 +69,6 @@ class Button extends \Magento\Framework\View\Element\Template
      */
     protected $_storeManager;
 
-    protected $_logger;
-
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
@@ -78,7 +76,6 @@ class Button extends \Magento\Framework\View\Element\Template
         \Magento\Framework\Session\Generic $generic,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Url\Helper\Data $frameworkHelperDataHelper,
-        \Psr\Log\LoggerInterface $logger,
         array $data = []
     ) {
         $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
@@ -86,7 +83,6 @@ class Button extends \Magento\Framework\View\Element\Template
         $this->generic = $generic;
         $this->customerSession = $customerSession;
         $this->frameworkHelperDataHelper = $frameworkHelperDataHelper;
-        $this->_logger = $logger;
         $this->_storeManager = $context->getStoreManager();
         parent::__construct(
             $context,

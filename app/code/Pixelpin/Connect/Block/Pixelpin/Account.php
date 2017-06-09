@@ -53,20 +53,16 @@ class Account extends \Magento\Framework\View\Element\Template
      */
     protected $registry;
 
-    protected $_logger;
-
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
         \PixelPin\Connect\Model\Pixelpin\Userinfo $socialConnectPixelpinUserinfo,
         \Magento\Framework\Registry $registry,
-        \Psr\Log\LoggerInterface $logger,
         array $data = []
     ) {
         $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
         $this->registry = $registry;
         $this->socialConnectPixelpinUserinfo = $socialConnectPixelpinUserinfo;
-        $this->_logger = $logger;
         parent::__construct(
             $context,
             $data

@@ -58,23 +58,17 @@ class Userinfo
      */
     protected $generic;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $_logger;
 
     public function __construct(
         \Magento\Customer\Model\Session $customerSession,
         \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
         \PixelPin\Connect\Helper\Pixelpin $socialConnectPixelpinHelper,
-        \Magento\Framework\Session\Generic $generic,
-        \Psr\Log\LoggerInterface $logger
+        \Magento\Framework\Session\Generic $generic
     ) {
         $this->customerSession = $customerSession;
         $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
         $this->socialConnectPixelpinHelper = $socialConnectPixelpinHelper;
         $this->generic = $generic;
-        $this->_logger = $logger;
         if(!$this->customerSession->isLoggedIn())
             return;
 
@@ -105,7 +99,7 @@ class Userinfo
     }
 
     /*
-    Gets User Info from PixelPin/Client api(): 'https://ws3.pixelpin.co.uk/index.php/api/oauth2/v1.1/userdata'
+    Gets User Info from PixelPin/Client api(): 'https://login.pixelpin.io/connect/userinfo'
     */
     public function getUserInfo()
     {

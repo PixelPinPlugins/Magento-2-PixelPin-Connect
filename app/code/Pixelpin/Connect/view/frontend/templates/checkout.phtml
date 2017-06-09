@@ -40,8 +40,8 @@
                 <!--<?php if (!$block->isLoggedIn()): ?>-->
 		 		   <?php if($this->_pixelpinEnabled()): ?>
         			     <div class="<?php echo $this->_getCol(); ?> pixelpin-connect-checkout-pixelpin">
-        				    <div class="step-title" data-role="title"><?php echo __('Pixelpin Connect') ?></div>
-            			     <p><?php echo __('You can continue with checkout using your <strong>Pixelpin</strong> account.') ?></p>
+        				    <div class="step-title" data-role="title"><?php echo __('Checkout Using PixelPin') ?></div>
+            			     <p><?php echo __('You can continue with checkout using your <strong>Pixelpin</strong> account and avoid filling in those nasty forms! If you don\'t have a PixelPin account, sign up using the same button below.') ?></p>
                              <?php echo $this->getLayout()->createBlock("Pixelpin\Connect\Block\Pixelpin\Button")->setTemplate("Pixelpin_Connect::checkoutbutton.phtml")->toHtml(); ?>
         			     </div>
                     <?php endif; ?>

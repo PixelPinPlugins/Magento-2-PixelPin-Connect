@@ -62,11 +62,6 @@ class Client extends \Magento\Framework\DataObject
     protected $_url;
 
     /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $scopeConfig;
@@ -76,21 +71,14 @@ class Client extends \Magento\Framework\DataObject
      */
     protected $storeManager;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $_logger;
-
     public function __construct(
         \Magento\Framework\UrlInterface $url,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface  $storeManager,
-        \Psr\Log\LoggerInterface $logger
+        \Magento\Store\Model\StoreManagerInterface  $storeManager
     )
      {
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
-        $this->_logger = $logger;
 
          if(($this->isEnabled = $this->_isEnabled())) {
              $this->clientId = $this->_getClientId();
@@ -159,7 +147,6 @@ class Client extends \Magento\Framework\DataObject
     public function setAccessToken($token)
     {
        $this->token = json_decode($token);
-       $this->_logger->addNotice($token);
     }
 
     /*
@@ -271,13 +258,10 @@ class Client extends \Magento\Framework\DataObject
                     __('Required HTTP method is not supported.')
                 );
         }
-        $this->_logger->debug(json_encode($params));
         $response = $client->request($method);
-        $this->_logger->debug($response->getStatus().' - '. $response->getBody());
         $decoded_response = json_decode($response->getBody());
 
         if($response->isError()) {
-            $this->_logger->addNotice($response);
             $status = $response->getStatus();
             if(($status == 400 || $status == 401 || $status == 429)) {
                 if(isset($decoded_response->error->message)) {

@@ -55,8 +55,8 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
      * @var \Magento\Framework\ImageFactory
      */
     protected $imageFactory;
-
-    protected $_logger;
+	
+	protected $addresss;
 
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -64,13 +64,13 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Customer\Model\CustomerFactory $customerCustomerFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\ImageFactory $imageFactory,
-        \Psr\Log\LoggerInterface $logger
+		\Magento\Customer\Model\AddressFactory $addresss
     ) {
+		$this->addresss = $addresss;
         $this->imageFactory = $imageFactory;
         $this->customerSession = $customerSession;
         $this->customerCustomerFactory = $customerCustomerFactory;
         $this->storeManager = $storeManager;
-        $this->_logger = $logger;
         parent::__construct(
             $context
         );
@@ -115,22 +115,66 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
     
     public function connectByCreatingAccount(
             $email,
-            $firstName,
-            $lastName,
+            $given_name,
+            $family_name,
+			$gender,
+			$birthdate,
+			$phone_number,
+			$address,
             $pixelpinId,
             $token)
     {
+		$jsonAddress = $address;
+		
+		$decodedAddress = json_decode($jsonAddress);
+		
+		$_customer = array (
+			'given_name' => $given_name,
+			'family_name' => $family_name,
+			'email' => $email,
+			'birthdate' => $birthdate,
+			'gender' => $gender,
+			'street_address' => $decodedAddress->street_address,
+			'locality' => $decodedAddress->locality,
+			'postal_code' => $decodedAddress->postal_code,
+			'country' => $decodedAddress->country,
+			'region' => $decodedAddress->region,
+			'phone_number' => $phone_number,
+		);
+		
         $customer = $this->customerCustomerFactory->create();
 
-        $customer->setEmail($email)
-                ->setFirstname($firstName)
-                ->setLastname($lastName)
+        $customer->setEmail($_customer['email'])
+                ->setFirstname($_customer['given_name'])
+                ->setLastname($_customer['family_name'])
                 ->setInchooSocialconnectPPid($pixelpinId)
                 ->setInchooSocialconnectPPtoken($token)
                 ->save();
 
         $customer->setConfirmation(null);
         $customer->save();
+		
+		if(empty($decodedAddress->street_address)) {
+                
+        }
+        else
+        {
+            $customAddress = $this->addresss->create();
+        
+            $customAddress->setCustomerId($customer->getId())
+                    ->setFirstname($_customer['given_name'])
+                    ->setLastname($_customer['family_name'])
+                    ->setCountryId($_customer['country'])
+                    ->setPostcode($_customer['postal_code'])
+                    ->setCity($_customer['locality'])
+                    ->setTelephone($_customer['phone_number'])
+                    ->setStreet($_customer['street_address'])
+                    ->setIsDefaultBilling('1')
+                    ->setIsDefaultShipping('1')
+                    ->setSaveInAddressBook('1');
+                $customAddress->save();
+        }
+				
 
         $this->customerSession->setCustomerAsLoggedIn($customer);            
     }

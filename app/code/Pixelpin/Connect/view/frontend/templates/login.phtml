@@ -38,16 +38,53 @@
             <div class="<?php echo $this->_getDescCol(); ?> new-users pixelpin-connect-login-upper-pixelpin">
             <div class="block">
                 <div class="block-title">
-                    <!--<h2 class="legend"><?php echo __('Pixelpin Connect'); ?></h2>-->
-                    <strong id="block-customer-login-heading" role="heading" aria-level="2">PixelPin Connect</strong>                                     
+                    <strong id="block-customer-login-heading" role="heading" aria-level="2">Login Using PixelPin</strong>                                     
                 </div>
                 <div class="block-content">
                     <div class="fieldset">
                         <div class="<?php echo $this->_getButtCol(); ?> pixelpin-connect-login-lower-pixelpin">
                             <div class="buttons-set">
                                 <div>
-                                    <p><?php echo __('You can login using your Pixelpin account.'); ?></p>
+                                    <p><?php echo __('If you already registered with PixelPin, you can use your picture to login to our site.'); ?></p>
                                     <?php echo $block->getBlockHtml('pixelpin_connect_login_button'); ?>
+									<br>
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<div class="pixelpin-connect-login-register">
+    <div class="account-login">
+        <div class="<?php echo $this->_getColSet(); ?> pixelpin-connect-login-upper">
+            <?php if($this->_pixelpinEnabled()): ?>
+            <div class="<?php echo $this->_getDescCol(); ?> new-users pixelpin-connect-login-upper-pixelpin">
+            <div class="block">
+                <div class="block-title">
+                    <strong id="block-customer-login-heading" role="heading" aria-level="2">Register Using PixelPin</strong>                                     
+                </div>
+                <div class="block-content">
+                    <div class="fieldset">
+                        <div class="<?php echo $this->_getButtCol(); ?> pixelpin-connect-login-lower-pixelpin">
+                            <div class="buttons-set">
+                                <div>
+                                    <p><?php echo __('Not registered? If you have a PixelPin account already, you can register with this website without needing to fill out those time consuming registration forms! If you don\'t have a PixelPin account, sign up to PixelPin using this button too! And use your PixelPin account on other websites in the future.'); ?></p>
+                                    <div class="clearer">
+                                        <div class="pixelpin-connect-pixelpin">
+                                            <div class="pixelpin-connect-pixelpin-left">
+                                                
+                                            </div>
+                                            <div class="pixelpin-connect-pixelpin-inner">
+                                                <a href="<?php echo $this->escapeUrl($this->_getButtonUrl()); ?>">Register Using PixelPin</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
                                 </div>   
                             </div>
                         </div>

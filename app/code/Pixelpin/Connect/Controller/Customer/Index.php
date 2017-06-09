@@ -41,8 +41,6 @@ class Index extends \Magento\Framework\App\Action\Action {
      */
     protected $resultPageFactory;
 
-    protected $_logger;
-
     /**
      * @var \PixelPin\Connect\Model\Pixelpin\Userinfo
      */
@@ -87,7 +85,6 @@ class Index extends \Magento\Framework\App\Action\Action {
         \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \PixelPin\Connect\Model\Pixelpin\Userinfo $socialConnectPixelpinUserinfo,
-        \Psr\Log\LoggerInterface $logger,
         \PixelPin\Connect\Model\Pixelpin\Redirect $redirect
     ) {
         $this->generic = $generic;
@@ -99,7 +96,6 @@ class Index extends \Magento\Framework\App\Action\Action {
         $this->registry = $registry;
         $this->socialConnectPixelpinUserinfo = $socialConnectPixelpinUserinfo;
         $this->resultPageFactory = $resultPageFactory;
-        $this->_logger = $logger;
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
         $this->redirect = $redirect;
@@ -184,8 +180,6 @@ class Index extends \Magento\Framework\App\Action\Action {
         if($state != $this->generic->getPixelpinCsrf()) {
             return;
         }
-
-        $this->_logger->addNotice($errorCode);
 
         if($errorCode) {
             // Pixelpin API red light - abort
@@ -295,6 +289,54 @@ class Index extends \Magento\Framework\App\Action\Action {
                     );
                 return $resultRedirect->setRefererOrBaseUrl();
             }
+			
+			if(empty($userInfo->email)) {
+				$this->managerInterface->addError(
+						__('Sorry, we require your email to register you. We could not retrieve your email from PixelPin. Please try again.')
+					);
+			}
+			
+			if(empty($userInfo->given_name)) {
+				$this->managerInterface->addError(
+						__('Sorry, we require your first name to register you. We could not retrieve your first name from PixelPin. Please try again.')
+					);
+			}
+			
+			if(empty($userInfo->family_name)) {
+				$this->managerInterface->addError(
+						__('Sorry, we require your last name to register you. We could not retrieve your last name from PixelPin. Please try again.')
+					);
+			}
+			
+			if(empty($userInfo->gender)) {
+                $userInfo->gender = '';
+            }
+
+            if(empty($userInfo->birthdate)) {
+                $userInfo->birthdate = '';
+            }
+
+            if(empty($userInfo->phone_number)) {
+                $userInfo->phone_number = '';
+            }
+
+            if(empty($userInfo->address)) {
+                $address = array(
+                        "street_address" => "",
+                        "locality" => "",
+                        "postal_code" => "",
+                        "country" => "",
+                        "region" => "",
+                    );
+
+                $jsonAddress = json_encode($address);
+
+                $userInfo->address = $jsonAddress;
+
+                $this->managerInterface->addNotice(
+						__('We\'ve noticed that you have no address set. We recommend adding a new address into your address book before proceeding.')
+					);
+            }
 
             // New connection - create, attach, login
 
@@ -302,6 +344,10 @@ class Index extends \Magento\Framework\App\Action\Action {
                 $userInfo->email,
                 $userInfo->given_name,
                 $userInfo->family_name,
+				$userInfo->gender,
+				$userInfo->birthdate,
+				$userInfo->phone_number,
+				$userInfo->address,
                 $userInfo->sub,
                 $token
             );

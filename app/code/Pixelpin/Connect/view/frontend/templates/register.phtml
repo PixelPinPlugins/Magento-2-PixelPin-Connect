@@ -35,13 +35,12 @@
     <div class="<?php echo $this->_getColSet(); ?>">
 		<?php if($this->_pixelpinEnabled()): ?>
         <div class="<?php echo $this->_getCol(); ?> pixelpin-connect-register-pixelpin">
-            <fieldset class="fieldset">
-                <!--<h2 class="legend"><?php echo __('Pixelpin Connect') ?></h2>-->            
+            <fieldset class="fieldset">           
                 <legend class="legend">
-                    <span><?php echo __('Pixelpin Connect') ?></span>
+                    <span><?php echo __('Register Using PixelPin') ?></span>
                 </legend>
                 <div>
-                    <p><?php echo __('You can login using your Pixelpin account.'); ?></p>
+                    <p><?php echo __('Not registered? If you have a PixelPin account already, you can register with this website without needing to fill out those time consuming registration forms! If you don\'t have a PixelPin account, sign up to PixelPin using this button too! And use your PixelPin account on other websites in the future.'); ?></p>
                 </div>
                 <?php echo $block->getBlockHtml('pixelpin_connect_register_button'); ?>
             </fieldset>

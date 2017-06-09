@@ -41,6 +41,7 @@ class Login extends \Magento\Framework\View\Element\Template
     public $numDescShown = 0;
     public $numButtShown = 0;
     public $url;
+	protected $userInfo = null;
 
     /**
      * @var \Magento\Customer\Model\Session
@@ -59,19 +60,17 @@ class Login extends \Magento\Framework\View\Element\Template
      */
     public $registry;
 
-    protected $_logger;
-
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
+		\PixelPin\Connect\Model\Pixelpin\Userinfo $userInfo,
         \Magento\Framework\Registry $registry,
-        \Psr\Log\LoggerInterface $logger,
         \Magento\Customer\Model\Session $customerSession, 
         array $data = []
     ) {
         $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
+		$this->userInfo = $userInfo;
         $this->registry = $registry;
-        $this->_logger = $logger;
         $this->customerSession = $customerSession;
         parent::__construct(
             $context,
@@ -85,7 +84,7 @@ class Login extends \Magento\Framework\View\Element\Template
 
         $this->clientPixelpin = $this->socialConnectPixelpinClient;
 
-	   if ( $this->clientPixelpin === null )
+	    if ( $this->clientPixelpin === null )
         {
 	
         }
@@ -96,6 +95,12 @@ class Login extends \Magento\Framework\View\Element\Template
         if($this->_pixelpinEnabled()) {
             $this->numEnabled++;
         }
+		
+		if(!($this->clientPixelpin->isEnabled())) {
+            return;
+        }
+
+        $this->userInfo = $this->registry->registry('pixelpin_connect_pixelpin_userinfo');
 
         $this->registry->register('pixelpin_connect_button_text2', __('Login Using PixelPin'));
 
@@ -134,5 +139,14 @@ class Login extends \Magento\Framework\View\Element\Template
     public function _pixelpinEnabled()
     {
         return $this->clientPixelpin->isEnabled();
+    }
+	
+	public function _getButtonUrl()
+    {
+        if(empty($this->userInfo)) {
+            return $this->clientPixelpin->createAuthUrl();
+        } else {
+            return $this->getUrl('connect/pixelpin/disconnect');
+        }
     }
 }
