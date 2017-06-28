@@ -19,7 +19,7 @@ class Index extends \Magento\Framework\App\Action\Action {
     /**
      * @var \Inchoo\SocialConnect\Helper\Data
      */
-    protected $socialConnectHelper;
+    protected $pixelpinConnectHelper;
 
     /**
      * @var \Magento\Customer\Model\Session
@@ -29,12 +29,12 @@ class Index extends \Magento\Framework\App\Action\Action {
     /**
      * @var \Inchoo\SocialConnect\Helper\Pixelpin
      */
-    protected $socialConnectPixelpinHelper;
+    protected $pixelpinConnectPixelpinHelper;
 
     /**
      * @var \Inchoo\SocialConnect\Model\Pixelpin\Client
      */
-    protected $socialConnectPixelpinClient;
+    protected $pixelpinConnectPixelpinClient;
 
     /**
      * @var \Magento\Framework\View\Result\PageFactory
@@ -44,7 +44,7 @@ class Index extends \Magento\Framework\App\Action\Action {
     /**
      * @var \PixelPin\Connect\Model\Pixelpin\Userinfo
      */
-    protected $socialConnectPixelpinUserinfo;
+    protected $pixelpinConnectPixelpinUserinfo;
 
     /**
      * @var \Magento\Framework\Registry
@@ -76,25 +76,25 @@ class Index extends \Magento\Framework\App\Action\Action {
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Message\ManagerInterface $managerInterface,
         \Magento\Framework\Session\Generic $generic,
-        \PixelPin\Connect\Helper\Data $socialConnectHelper,
+        \PixelPin\Connect\Helper\Data $pixelpinConnectHelper,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Store\Model\StoreManagerInterface  $storeManager,
-        \PixelPin\Connect\Helper\Pixelpin $socialConnectPixelpinHelper,
-        \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
+        \PixelPin\Connect\Helper\Pixelpin $pixelpinConnectPixelpinHelper,
+        \PixelPin\Connect\Model\Pixelpin\Client $pixelpinConnectPixelpinClient,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \PixelPin\Connect\Model\Pixelpin\Userinfo $socialConnectPixelpinUserinfo,
+        \PixelPin\Connect\Model\Pixelpin\Userinfo $pixelpinConnectPixelpinUserinfo,
         \PixelPin\Connect\Model\Pixelpin\Redirect $redirect
     ) {
         $this->generic = $generic;
         $this->managerInterface = $managerInterface;
-        $this->socialConnectHelper = $socialConnectHelper;
+        $this->pixelpinConnectHelper = $pixelpinConnectHelper;
         $this->customerSession = $customerSession;
-        $this->socialConnectPixelpinHelper = $socialConnectPixelpinHelper;
-        $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
+        $this->pixelpinConnectPixelpinHelper = $pixelpinConnectPixelpinHelper;
+        $this->pixelpinConnectPixelpinClient = $pixelpinConnectPixelpinClient;
         $this->registry = $registry;
-        $this->socialConnectPixelpinUserinfo = $socialConnectPixelpinUserinfo;
+        $this->pixelpinConnectPixelpinUserinfo = $pixelpinConnectPixelpinUserinfo;
         $this->resultPageFactory = $resultPageFactory;
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
@@ -110,7 +110,10 @@ class Index extends \Magento\Framework\App\Action\Action {
             $context
         );
     }
-
+	
+	/**
+	 * Connect Action.
+	 */
     public function connectAction()
     {
         try {
@@ -120,14 +123,17 @@ class Index extends \Magento\Framework\App\Action\Action {
         }
 
         if(!empty($this->referer)) {
-            $client = $this->socialConnectPixelpinClient;
+            $client = $this->pixelpinConnectPixelpinClient;
 
             $client->getRedirectUri($this->referer);           
         } else {
             return $this->redirectUri;         
         }
     }
-
+	
+	/**
+	 * Disconnect Action.
+	 */
     public function disconnectAction()
     {
         $customer = $this->customerSession->getCustomer();
@@ -141,29 +147,28 @@ class Index extends \Magento\Framework\App\Action\Action {
         if(!empty($this->referer)) {
             $this->_redirectUrl($this->referer);
         } else {
-            $this->socialConnectHelper->redirect404($this);
+            $this->pixelpinConnectHelper->redirect404($this);
         }
     }
-
+	
+	/*
+	 * Disconnect Callback.
+	 */
     protected function _disconnectCallback(\Magento\Customer\Model\Customer $customer) 
     {
         $this->referer = $this->getUrl('connect/customer/index');        
         
-        $this->socialConnectPixelpinHelper->disconnect($customer);
+        $this->pixelpinConnectPixelpinHelper->disconnect($customer);
         
         $this->managerInterface->addSuccess(
                 __('You have successfully disconnected your Pixelpin account from our store account.')
             );
     }
-
+	
+	/*
+	 * Connect Callback
+	 */
     protected function _connectCallback() {
-
-        $this->socialConnectPixelpinClient->_isEnabled();
-
-        $this->socialConnectPixelpinClient->_getClientId();
-
-        $this->socialConnectPixelpinClient->_getClientSecret();
-
         $errorCode = $this->getRequest()->getParam('error');
         $code = $this->getRequest()->getParam('code');
         $state = $this->getRequest()->getParam('state');
@@ -204,14 +209,14 @@ class Index extends \Magento\Framework\App\Action\Action {
 
         if ($code) {
             // Pixelpin API green light - proceed
-            $client = $this->socialConnectPixelpinClient;
+            $client = $this->pixelpinConnectPixelpinClient;
 
             $userInfo = $client->api('userinfo');
 
             $token = $client->getAccessToken();
 
 
-            $customersByPixelpinId = $this->socialConnectPixelpinHelper
+            $customersByPixelpinId = $this->pixelpinConnectPixelpinHelper
                 ->getCustomersByPixelpinId($userInfo->sub);
 
 
@@ -231,7 +236,7 @@ class Index extends \Magento\Framework\App\Action\Action {
                 // Connect from account dashboard - attach
                 $customer = $this->customerSession->getCustomer();
 
-                $this->socialConnectPixelpinHelper->connectByPixelpinId(
+                $this->pixelpinConnectPixelpinHelper->connectByPixelpinId(
                     $customer,
                     $userInfo->sub,
                     $token
@@ -249,7 +254,7 @@ class Index extends \Magento\Framework\App\Action\Action {
                 // Existing connected user - login
                 $customer = $customersByPixelpinId->getFirstItem();
 
-                $this->socialConnectPixelpinHelper->loginByCustomer($customer);
+                $this->pixelpinConnectPixelpinHelper->loginByCustomer($customer);
 
                 $this->managerInterface
                     ->addSuccess(
@@ -262,14 +267,14 @@ class Index extends \Magento\Framework\App\Action\Action {
 
             try
             {
-                $customersByEmail = $this->socialConnectPixelpinHelper
+                $customersByEmail = $this->pixelpinConnectPixelpinHelper
                     ->getCustomersByEmail($userInfo->email);
 
                 if($customersByEmail->count())  {
                     // Email account already exists - attach, login
                     $customer = $customersByEmail->getFirstItem();
                     
-                    $this->socialConnectPixelpinHelper->connectByPixelpinId(
+                    $this->pixelpinConnectPixelpinHelper->connectByPixelpinId(
                         $customer,
                         $userInfo->sub,
                         $token
@@ -340,7 +345,7 @@ class Index extends \Magento\Framework\App\Action\Action {
 
             // New connection - create, attach, login
 
-            $this->socialConnectPixelpinHelper->connectByCreatingAccount(
+            $this->pixelpinConnectPixelpinHelper->connectByCreatingAccount(
                 $userInfo->email,
                 $userInfo->given_name,
                 $userInfo->family_name,
@@ -380,7 +385,7 @@ class Index extends \Magento\Framework\App\Action\Action {
             $path = 'checkout';
             $resultRedirect->setPath($path);
         }
-        return $resultRedirect;
+			return $resultRedirect;
     }
 }
 ?>

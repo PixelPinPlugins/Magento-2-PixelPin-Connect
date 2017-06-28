@@ -49,23 +49,25 @@ abstract class Account extends \Magento\Framework\App\Action\Action
     /**
      * @var \PixelPin\Connect\Model\Pixelpin\Userinfo
      */
-    protected $socialConnectPixelpinUserinfo;
+    protected $pixelpinConnectPixelpinUserinfo;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Registry $registry,
-        \PixelPin\Connect\Model\Pixelpin\Userinfo $socialConnectPixelpinUserinfo
+        \PixelPin\Connect\Model\Pixelpin\Userinfo $pixelpinConnectPixelpinUserinfo
     ) {
         $this->customerSession = $customerSession;
         $this->registry = $registry;
-        $this->socialConnectPixelpinUserinfo = $socialConnectPixelpinUserinfo;
+        $this->pixelpinConnectPixelpinUserinfo = $pixelpinConnectPixelpinUserinfo;
         parent::__construct(
             $context
         );
     }
 
-    
+    /** 
+	 * Account Controller PreDispatch
+	 */ 
     public function preDispatch()
     {
         parent::preDispatch();
@@ -78,10 +80,13 @@ abstract class Account extends \Magento\Framework\App\Action\Action
             $this->setFlag('', 'no-dispatch', true);
         }
     }    
-		
+	
+	/**
+	 * User info action.
+	 */
     public function pixelpinAction()
     {   
-		$userInfo = $this->socialConnectPixelpinUserinfo
+		$userInfo = $this->pixelpinConnectPixelpinUserinfo
             ->getUserInfo();
         
         $this->registry->register('pixelpin_connect_pixelpin_userinfo', $userInfo);

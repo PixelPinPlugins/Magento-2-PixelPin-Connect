@@ -35,18 +35,15 @@ namespace PixelPin\Connect\Block\Pixelpin;
 
 class Account extends \Magento\Framework\View\Element\Template
 {
-    protected $client = null;
-    protected $userInfo = null;
-
     /**
      * @var \PixelPin\Connect\Model\Pixelpin\Client
      */
-    protected $socialConnectPixelpinClient;
+    protected $client = null;
 
     /**
      * @var \PixelPin\Connect\Model\Pixelpin\Userinfo
      */
-    protected $socialConnectPixelpinUserinfo;
+    protected $userInfo = null;
 
     /**
      * @var \Magento\Framework\Registry
@@ -55,14 +52,14 @@ class Account extends \Magento\Framework\View\Element\Template
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
-        \PixelPin\Connect\Model\Pixelpin\Userinfo $socialConnectPixelpinUserinfo,
+        \PixelPin\Connect\Model\Pixelpin\Client $client,
+        \PixelPin\Connect\Model\Pixelpin\Userinfo $userInfo,
         \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
+        $this->client = $client;
         $this->registry = $registry;
-        $this->socialConnectPixelpinUserinfo = $socialConnectPixelpinUserinfo;
+        $this->userInfo = $userInfo;
         parent::__construct(
             $context,
             $data
@@ -73,48 +70,74 @@ class Account extends \Magento\Framework\View\Element\Template
     protected function _construct() {
         parent::_construct();
 
-        $this->client = $this->socialConnectPixelpinClient;
+        $this->client = $this->client;
         if(!($this->client->isEnabled())) {
             return;
         }
 
         $this->userInfo = $this->registry->registry('pixelpin_connect_pixelpin_userinfo');
 
-        //$this->userInfo = $this->socialConnectPixelpinUserinfo;
-
-        //$this->userInfo->getUserInfo();
-
         $this->setTemplate('pixelpin/connect/account.phtml');
-    }
+		
+		$url2 = $this->_storeManager->getStore()->getCurrentUrl();
 
+        $find = 'index';
+
+        $pos = strpos($url2, $find);
+
+        if ($pos === true){
+            $url = $this->_storeManager->getStore()->getCurrentUrl();
+            $this->customerSession->setMyValue($url);
+            return $url;
+        }  
+    }
+	
+	/**
+	 * Checks if the user's info exists.
+	 * 
+	 * Used in the setTemplate. 
+	 * 
+	 * @return bool
+	 */
     public function _hasUserInfo()
     {
         return (bool) $this->userInfo;
     }
-
+	
+	/**
+	 * Gets the user's sub id.
+	 * 
+	 * Used in the setTemplate.
+	 * 
+	 * @return string $pixelpinId 
+	 */
     public function _getPixelpinId()
     {
-        return $this->userInfo->id;
+        return $this->userInfo->sub;
     }
 
-    public function _getStatus()
-    {
-		return $this->htmlEscape($this->userInfo->firstName);
-    }
-
+	/**
+	 * Gets the user's email.
+	 * 
+	 * Used in the setTemplate
+	 * 
+	 * @return string $email
+	 */
     public function _getEmail()
     {
         return $this->userInfo->email;
     }
 
-    public function _getPicture()
-    {
-        return null;
-    }
-
+	/**
+	 * Gets the user's first name.
+	 * 
+	 * Used in the setTemplate
+	 * 
+	 * @return string $firstName
+	 */
     public function _getName()
     {
-        return $this->userInfo->firstName;
+        return $this->userInfo->given_name;
     }
 
 }

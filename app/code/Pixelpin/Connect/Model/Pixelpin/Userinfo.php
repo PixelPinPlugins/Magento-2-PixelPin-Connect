@@ -35,6 +35,9 @@ namespace PixelPin\Connect\Model\Pixelpin;
 
 class Userinfo
 {
+	/**
+     * @var \Inchoo\SocialConnect\Model\Pixelpin\Client
+     */
     protected $client = null;
     protected $userInfo = null;
 
@@ -44,14 +47,9 @@ class Userinfo
     protected $customerSession;
 
     /**
-     * @var \Inchoo\SocialConnect\Model\Pixelpin\Client
-     */
-    protected $socialConnectPixelpinClient;
-
-    /**
      * @var \Inchoo\SocialConnect\Helper\Pixelpin
      */
-    protected $socialConnectPixelpinHelper;
+    protected $helper;
 
     /**
      * @var \Magento\Framework\Session\Generic
@@ -61,33 +59,33 @@ class Userinfo
 
     public function __construct(
         \Magento\Customer\Model\Session $customerSession,
-        \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
-        \PixelPin\Connect\Helper\Pixelpin $socialConnectPixelpinHelper,
+        \PixelPin\Connect\Model\Pixelpin\Client $client,
+        \PixelPin\Connect\Helper\Pixelpin $helper,
         \Magento\Framework\Session\Generic $generic
     ) {
         $this->customerSession = $customerSession;
-        $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
-        $this->socialConnectPixelpinHelper = $socialConnectPixelpinHelper;
+        $this->client = $client;
+        $this->helper = $helper;
         $this->generic = $generic;
         if(!$this->customerSession->isLoggedIn())
             return;
 
-        $this->client = $this->socialConnectPixelpinClient;
+        $this->client = $client;
         if(!($this->client->isEnabled())) {
             return;
         }
 
         $customer = $this->customerSession->getCustomer();
-        if(($socialconnectTid = $customer->getInchooSocialconnectPPid()) &&
-                ($socialconnectTtoken = $customer->getInchooSocialconnectPPtoken())) {
+        if(($pixelpinconnectTid = $customer->getPixelPinConnectPPid()) &&
+                ($pixelpinconnectTtoken = $customer->getPixelPinConnectPPtoken())) {
 					
-            $helper = $this->socialConnectPixelpinHelper;
+            $helper = $this->helper;
 
             try{
-                $this->client->setAccessToken($socialconnectTtoken);
+                $this->client->setAccessToken($pixelpinconnectTtoken);
                 $this->userInfo = $this->client->api('userinfo'); 
 
-            }  catch (Inchoo_SocialConnect_PixelpinOAuthException $e) {
+            }  catch (Pixelpin_Connect_OAuthException $e) {
                 $helper->disconnect($customer);
                 $this->generic->addNotice($e->getMessage());                
             } catch(Exception $e) {
