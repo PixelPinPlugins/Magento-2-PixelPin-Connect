@@ -79,7 +79,7 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function disconnect(\Magento\Customer\Model\Customer $customer) 
     {
-        $this->customerSession->unsInchooSocialconnectPixelpinUserinfo();
+        $this->customerSession->unsPixelpinConnectPixelpinUserinfo();
         
         $pictureFilename = $this->getBaseDir(\Magento\Store\Model\Store::URL_TYPE_MEDIA)
                 .DS
@@ -89,14 +89,14 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
                 .DS
                 .'pixelpin'
                 .DS                
-                .$customer->getInchooSocialconnectPPid();
+                .$customer->getPixelpinConnectPPid();
         
         if(file_exists($pictureFilename)) {
             @unlink($pictureFilename);
         }        
         
-        $customer->setInchooSocialconnectPPid(null)
-        ->setInchooSocialconnectPPtoken(null)
+        $customer->setPixelPinConnectPPid(null)
+        ->setPixelPinConnectPPtoken(null)
         ->save();   
     }
     
@@ -106,8 +106,8 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
             $token)
     {
 
-        $customer->setInchooSocialconnectPPid($pixelpinId)
-                ->setInchooSocialconnectPPtoken($token)
+        $customer->setPixelPinConnectPPid($pixelpinId)
+                ->setPixelPinConnectPPtoken($token)
                 ->save();
         
         $this->customerSession->setCustomerAsLoggedIn($customer);
@@ -147,18 +147,14 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
         $customer->setEmail($_customer['email'])
                 ->setFirstname($_customer['given_name'])
                 ->setLastname($_customer['family_name'])
-                ->setInchooSocialconnectPPid($pixelpinId)
-                ->setInchooSocialconnectPPtoken($token)
+                ->setPixelPinConnectPPid($pixelpinId)
+                ->setPixelPinConnectPPtoken($token)
                 ->save();
 
         $customer->setConfirmation(null);
         $customer->save();
 		
-		if(empty($decodedAddress->street_address)) {
-                
-        }
-        else
-        {
+		if(!empty($decodedAddress->street_address)) {
             $customAddress = $this->addresss->create();
         
             $customAddress->setCustomerId($customer->getId())
@@ -238,54 +234,5 @@ class Pixelpin extends \Magento\Framework\App\Helper\AbstractHelper
         }        
         
         return $collection;
-    }
-
-    public function getProperDimensionsPictureUrl($pixelpinId, $pictureUrl)
-    {
-        $pictureUrl = str_replace('_normal', '', $pictureUrl);
-        
-        $url = $this->getBaseUrl(\Magento\Store\Model\Store::URL_TYPE_MEDIA)
-                .'pixelpin'
-                .'/'
-                .'connect'
-                .'/'
-                .'pixelpin'
-                .'/'                
-                .$pixelpinId;
-
-        $filename = $this->getBaseDir(\Magento\Store\Model\Store::URL_TYPE_MEDIA)
-                .DS
-                .'pixelpin'
-                .DS
-                .'connect'
-                .DS
-                .'pixelpin'
-                .DS                
-                .$pixelpinId;
-
-        $directory = dirname($filename);
-
-        if (!file_exists($directory) || !is_dir($directory)) {
-            if (!@mkdir($directory, 0777, true))
-                return null;
-        }
-
-        if(!file_exists($filename) || 
-                (file_exists($filename) && (time() - filemtime($filename) >= 3600))){
-            $client = new \Zend_Http_Client($pictureUrl);
-            $client->setStream();
-            $response = $client->request('GET');
-            stream_copy_to_stream($response->getStream(), fopen($filename, 'w'));
-
-            $imageObj = $this->imageFactory->create($filename);
-            $imageObj->constrainOnly(true);
-            $imageObj->keepAspectRatio(true);
-            $imageObj->keepFrame(false);
-            $imageObj->resize(150, 150);
-            $imageObj->save($filename);
-        }
-        
-        return $url;
-    }
-    
+    }   
 }

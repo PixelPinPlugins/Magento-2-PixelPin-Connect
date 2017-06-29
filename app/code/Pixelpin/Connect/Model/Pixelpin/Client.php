@@ -41,11 +41,7 @@ class Client extends \Magento\Framework\DataObject
     const OAUTH2_TOKEN_URI = 'https://login.pixelpin.io/connect/token';
     const OAUTH2_AUTH_URI = 'https://login.pixelpin.io/connect/authorize';
     const OAUTH2_SERVICE_URI = 'https://login.pixelpin.io/connect/'; 
-
-    //https://ws3.pixelpin.co.uk/index.php/api/token/
-    //https://login.pixelpin.co.uk/OAuth2/Flogin.aspx
-    //https://ws3.pixelpin.co.uk/index.php/api/
-
+	
     const XML_PATH_ENABLED = 'pixelpinlogin/general/enabled';
     const XML_PATH_CLIENT_ID = 'pixelpinlogin/general/client_id';
     const XML_PATH_CLIENT_SECRET = 'pixelpinlogin/general/client_secret';
@@ -206,7 +202,7 @@ class Client extends \Magento\Framework\DataObject
     }
 
     /*
-    Retrives the Access Token from 'https://ws3.pixelpin.co.uk/index.php/api/token/'
+    Retrives the Access Token from 'https://login.pixelpin.io/connect/token'
     */
     public function fetchAccessToken()
     {
@@ -235,9 +231,17 @@ class Client extends \Magento\Framework\DataObject
         $this->token = $response;
     }
 
-    /*
-    Retrieves the http request from 'https://ws3.pixelpin.co.uk/index.php/api/'
-    */
+    /**
+	 * Http Request function.
+	 * 
+	 * @param type $url
+	 * @param type $method
+	 * @param type $params
+	 * @param type $httpHeader
+	 * @return type
+	 * @throws Exception
+	 * @throws Pixelpin_Connect_PixelpinOAuthException
+	 */
     public function _httpRequest($url, $method = 'GET', $params = array(), $httpHeader = array())
     {
         $client = new \Zend_Http_Client($url, array('timeout' => 60));

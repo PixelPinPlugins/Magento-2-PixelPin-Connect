@@ -34,19 +34,16 @@
 namespace PixelPin\Connect\Block;
 
 class Checkout extends \Magento\Framework\View\Element\Template
-{  
-    public $clientPixelpin = null; 
+{
     public $numEnabled = 0;
     public $numShown = 0;
 
     public $url;
 
-    //public $isCheckout = "0";
-
     /**
      * @var \Inchoo\SocialConnect\Model\Pixelpin\Client
      */
-    public $socialConnectPixelpinClient;
+    protected $client = null;
 
     /**
      * @var \Magento\Framework\Registry
@@ -65,13 +62,13 @@ class Checkout extends \Magento\Framework\View\Element\Template
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
+        \PixelPin\Connect\Model\Pixelpin\Client $client,
         \Magento\Framework\App\Http\Context $httpContext,
         \Magento\Framework\Registry $registry,
         \Magento\Customer\Model\Session $customerSession, 
         array $data = []
     ) {
-        $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
+        $this->client = $client;
         $this->registry = $registry;
         $this->customerSession = $customerSession;
         $this->httpContext = $httpContext;
@@ -84,8 +81,6 @@ class Checkout extends \Magento\Framework\View\Element\Template
 
     public function _construct() {
         parent::_construct();
-		$this->clientPixelpin = $this->socialConnectPixelpinClient;
-
         if(
 	        !$this->_pixelpinEnabled())
             return;
@@ -108,27 +103,51 @@ class Checkout extends \Magento\Framework\View\Element\Template
             $url = $this->_storeManager->getStore()->getCurrentUrl();
             $this->customerSession->setMyValue($url);
             return $url;
-        } else {
-
         }
-
     }
     
+	/**
+	 * Sets the col-set number
+	 * 
+	 * Used in the setTemplate. 
+	 * 
+	 * @return string
+	 */
     public function _getColSet()
     {
         return 'col'.$this->numEnabled.'-set';
     }
-
+	
+	/**
+	 * Sets the col number
+	 * 
+	 * Used in the setTemplate. 
+	 * 
+	 * @return string
+	 */
     public function _getCol()
     {
         return 'col-'.++$this->numShown;
     }    
 	
+	/**
+	 * Checks if the client is enabled.
+	 * 
+	 * Used in the setTemplate
+	 * 
+	 * @return bool
+	 */
+
 	public function _pixelpinEnabled()
     {
-        return $this->clientPixelpin->isEnabled();
+        return $this->client->isEnabled();
     }
-
+	
+	/**
+	 * Checks if the user is logged in. 
+	 * 
+	 * @return bool
+	 */
      public function isLoggedIn()
     {
         return $this->httpContext->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);

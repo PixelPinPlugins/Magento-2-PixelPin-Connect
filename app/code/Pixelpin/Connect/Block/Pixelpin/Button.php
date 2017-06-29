@@ -35,14 +35,15 @@ namespace PixelPin\Connect\Block\Pixelpin;
 
 class Button extends \Magento\Framework\View\Element\Template
 {
-    protected $client = null;
-    protected $oauth2 = null;
-    protected $userInfo = null;
-
-    /**
+	/**
      * @var \Inchoo\SocialConnect\Model\Pixelpin\Client
      */
-    protected $socialConnectPixelpinClient;
+    protected $client = null;
+	
+	/**
+     * @var \PixelPin\Connect\Model\Pixelpin\Userinfo
+     */
+    protected $userInfo = null;
 
     /**
      * @var \Magento\Framework\Registry
@@ -60,29 +61,22 @@ class Button extends \Magento\Framework\View\Element\Template
     protected $customerSession;
 
     /**
-     * @var \Magento\Framework\Url\Helper\Data
-     */
-    protected $frameworkHelperDataHelper;
-
-    /**
      * @var \Magento\Framework\View\Element\Template\Context
      */
     protected $_storeManager;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
+        \PixelPin\Connect\Model\Pixelpin\Client $client,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Session\Generic $generic,
         \Magento\Customer\Model\Session $customerSession,
-        \Magento\Framework\Url\Helper\Data $frameworkHelperDataHelper,
         array $data = []
     ) {
-        $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
+        $this->client = $client;
         $this->registry = $registry;
         $this->generic = $generic;
         $this->customerSession = $customerSession;
-        $this->frameworkHelperDataHelper = $frameworkHelperDataHelper;
         $this->_storeManager = $context->getStoreManager();
         parent::__construct(
             $context,
@@ -93,8 +87,6 @@ class Button extends \Magento\Framework\View\Element\Template
 
     protected function _construct() {
         parent::_construct();
-
-        $this->client = $this->socialConnectPixelpinClient;
         if(!($this->client->isEnabled())) {
             return;
         }
@@ -128,10 +120,10 @@ class Button extends \Magento\Framework\View\Element\Template
     {
         if(empty($this->userInfo)) {
             if(!($text = $this->registry->registry('pixelpin_connect_button_text'))){
-                $text = __('Connect');
+                $text = __('Connect to PixelPin');
             }
         } else {
-            $text = __('Disconnect');
+            $text = __('Disconnect from PixelPin');
         }
         
         return $text;

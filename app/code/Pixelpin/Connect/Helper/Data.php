@@ -57,7 +57,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $context
         );
     }
-
+	
+	/**
+	 * When Called, redirects user to a 404 page.
+	 * 
+	 * @param type $frontController
+	 */
     public function redirect404($frontController)
     {
         $frontController->getResponse()

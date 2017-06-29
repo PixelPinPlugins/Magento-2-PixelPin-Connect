@@ -3,6 +3,7 @@
     <head>
         <title>PixelPin Connect</title>
         <css src="Pixelpin_Connect::pixelpin_connect/css/styles.css"/>
+        <css src="Pixelpin_Connect::pixelpin_connect/pixelpin/css/button.css"/>
     </head>
     <update handle="customer_account"/>
     <body>

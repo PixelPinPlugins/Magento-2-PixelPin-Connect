@@ -35,8 +35,6 @@ namespace PixelPin\Connect\Block;
 
 class Register extends \Magento\Framework\View\Element\Template
 {
-	protected $clientPixelpin = null;
-    
     protected $numEnabled = 0;
     protected $numShown = 0;
 
@@ -45,7 +43,7 @@ class Register extends \Magento\Framework\View\Element\Template
     /**
      * @var \Inchoo\SocialConnect\Model\Pixelpin\Client
      */
-    protected $socialConnectPixelpinClient;
+    protected $client = null;
 
     /**
      * @var \Magento\Framework\Registry
@@ -59,12 +57,12 @@ class Register extends \Magento\Framework\View\Element\Template
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \PixelPin\Connect\Model\Pixelpin\Client $socialConnectPixelpinClient,
+        \PixelPin\Connect\Model\Pixelpin\Client $client,
         \Magento\Framework\Registry $registry,
         \Magento\Customer\Model\Session $customerSession, 
         array $data = []
     ) {
-        $this->socialConnectPixelpinClient = $socialConnectPixelpinClient;
+        $this->client = $client;
         $this->registry = $registry;
         $this->customerSession = $customerSession;
         parent::__construct(
@@ -76,8 +74,6 @@ class Register extends \Magento\Framework\View\Element\Template
 
     protected function _construct() {
         parent::_construct();
-		$this->clientPixelpin = $this->socialConnectPixelpinClient;
-
         if( !$this->_pixelpinEnabled())
             return;
 		
@@ -99,24 +95,43 @@ class Register extends \Magento\Framework\View\Element\Template
             $url = $this->_storeManager->getStore()->getCurrentUrl();
             $this->customerSession->setMyValue($url);
             return $url;
-        } else {
-            
         }
     }
-
+	
+	/**
+	 * Sets the col-set number
+	 * 
+	 * Used in the setTemplate. 
+	 * 
+	 * @return string
+	 */
     public function _getColSet()
     {
         return 'col-'.$this->numEnabled.'-set';
     }
-
+	
+	/**
+	 * Sets the col number
+	 * 
+	 * Used in the setTemplate. 
+	 * 
+	 * @return string
+	 */
     public function _getCol()
     {
         return 'col-'.++$this->numShown;
     }
 	
+	/**
+	 * Checks if the client is enabled
+	 * 
+	 * Used in the setTemplate
+	 * 
+	 * @return bool
+	 */
 	public function _pixelpinEnabled()
     {
-       return (bool) $this->clientPixelpin->isEnabled();
+       return (bool) $this->client->isEnabled();
     }
 
 }
