@@ -69,8 +69,7 @@ class Userinfo
         $this->generic = $generic;
         if(!$this->customerSession->isLoggedIn())
             return;
-
-        $this->client = $client;
+		
         if(!($this->client->isEnabled())) {
             return;
         }
@@ -78,8 +77,6 @@ class Userinfo
         $customer = $this->customerSession->getCustomer();
         if(($pixelpinconnectTid = $customer->getPixelPinConnectPPid()) &&
                 ($pixelpinconnectTtoken = $customer->getPixelPinConnectPPtoken())) {
-					
-            $helper = $this->helper;
 
             try{
                 $this->client->setAccessToken($pixelpinconnectTtoken);

@@ -81,9 +81,6 @@ class Login extends \Magento\Framework\View\Element\Template
 
     public function _construct() {
         parent::_construct();
-
-        $this->client = $this->client;
-
         if(!$this->_pixelpinEnabled()) 
             return;
 		

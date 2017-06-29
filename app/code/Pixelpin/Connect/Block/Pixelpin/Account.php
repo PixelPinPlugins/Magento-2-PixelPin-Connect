@@ -69,8 +69,6 @@ class Account extends \Magento\Framework\View\Element\Template
 
     protected function _construct() {
         parent::_construct();
-
-        $this->client = $this->client;
         if(!($this->client->isEnabled())) {
             return;
         }

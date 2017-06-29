@@ -32,7 +32,7 @@
 */
 ?>
 <div class="pixelpin-connect-account">
-    <?php if(!empty($pixelpinId)):  ?>
+    <?php if($this->_hasUserInfo()): ?>
 
     <?php
         $pixelpinId = $this->_getPixelpinId();
