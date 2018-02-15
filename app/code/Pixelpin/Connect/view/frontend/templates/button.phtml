@@ -32,12 +32,5 @@
 */
 ?>
 <div class="clearer">
-    <div class="pixelpin-connect-pixelpin">
-    	<div class="pixelpin-connect-pixelpin-left">
-        	
-        </div>
-        <div class="pixelpin-connect-pixelpin-inner">
-            <a href="<?php echo $this->escapeUrl($this->_getButtonUrl()); ?>"><?php echo $this->_getButtonText(); ?></a>
-        </div>
-    </div>
+    <?php echo $this->_getButton()['connectButton'] ?>
 </div>

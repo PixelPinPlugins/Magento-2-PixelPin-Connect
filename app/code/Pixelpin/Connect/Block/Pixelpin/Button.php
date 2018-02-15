@@ -35,6 +35,14 @@ namespace PixelPin\Connect\Block\Pixelpin;
 
 class Button extends \Magento\Framework\View\Element\Template
 {
+
+    const XML_PATH_PPSSO_ENABLED = 'pixelpinlogin/general/ppsso_customise';
+    const XML_PATH_PPSSO_SIZE = 'pixelpinlogin/general/ppsso_size';
+    const XML_PATH_PPSSO_COLOUR = 'pixelpinlogin/general/ppsso_colour';
+    const XML_PATH_PPSSO_SHOW_TEXT = 'pixelpinlogin/general/ppsso_show_text';
+    const XML_PATH_PPSSO_SHOW_LOGIN_TEXT = 'pixelpinlogin/general/login_button_text';
+    const XML_PATH_PPSSO_SHOW_REGISTER_TEXT = 'pixelpinlogin/general/register_button_text';
+
 	/**
      * @var \Inchoo\SocialConnect\Model\Pixelpin\Client
      */
@@ -65,6 +73,11 @@ class Button extends \Magento\Framework\View\Element\Template
      */
     protected $_storeManager;
 
+    /**
+     * @var \Magento\Framework\View\Element\Template\Context
+     */
+    protected $_scopeConfig;
+
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \PixelPin\Connect\Model\Pixelpin\Client $client,
@@ -73,6 +86,7 @@ class Button extends \Magento\Framework\View\Element\Template
         \Magento\Customer\Model\Session $customerSession,
         array $data = []
     ) {
+        $this->_scopeConfig = $context->getScopeConfig();
         $this->client = $client;
         $this->registry = $registry;
         $this->generic = $generic;
@@ -132,6 +146,99 @@ class Button extends \Magento\Framework\View\Element\Template
     public function _getCurrentUrl()
     {
         return $this->_storeManager->getStore()->getCurrentUrl();
+    }
+
+    /*
+    Retrieves the Store Config 
+    */
+    public function _getStoreConfig($xmlPath)
+    {
+        return $this->_scopeConfig->getValue($xmlPath, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $this->_storeManager->getStore()->getId());
+    }
+
+    public function _getButton()
+    {
+		$ppssoEnabled = $this->_getStoreConfig(self::XML_PATH_PPSSO_ENABLED);
+		$ppssoSize = $this->_getStoreConfig(self::XML_PATH_PPSSO_SIZE);
+		$ppssoColour = $this->_getStoreConfig(self::XML_PATH_PPSSO_COLOUR);
+		$ppssoTextEnabled = $this->_getStoreConfig(self::XML_PATH_PPSSO_SHOW_TEXT);
+		$ppssoLoginText = $this->_getStoreConfig(self::XML_PATH_PPSSO_SHOW_LOGIN_TEXT);
+		$ppssoRegisterText = $this->_getStoreConfig(self::XML_PATH_PPSSO_SHOW_REGISTER_TEXT);
+
+        //href
+        if(empty($this->userInfo)) {
+            $url =  $this->client->createAuthUrl();
+        } else {
+            $url =  $this->getUrl('connect/pixelpin/disconnect');
+        }
+
+        //class
+        if(empty($ppssoEnabled)) {
+            $class = 'ppsso-btn';
+        } else {
+			switch ($ppssoColour){
+				case 0:
+					$colour = '';
+					break;
+				case 1:
+					$colour = 'ppsso-cyan';
+					break;
+				case 2:
+					$colour = 'ppsso-pink';
+					break;
+				case 3:
+					$colour = 'ppsso-white';
+					break;
+			}
+
+			switch ($ppssoSize){
+				case 0:
+					$size = 'ppsso-logo-lg';
+					break;
+				case 1:
+					$size = 'ppsso-md ppsso-logo-md';
+					break;
+				case 2:
+					$size = 'ppsso-sm ppsso-logo-sm';
+					break;
+			}
+
+            $class = 'ppsso-btn ' . $size . ' ' . $colour;
+        }
+
+        if(empty($this->userInfo)) {
+            if(!($text = $this->registry->registry('pixelpin_connect_button_text'))){
+                $text = __('Connect to PixelPin');
+            }
+        } else {
+            $text = __('Disconnect from PixelPin');
+        }
+
+
+        $checkOutButton = '<a class="'. $class .'" href="' . $url .'">Check Out Using <span class="ppsso-logotype">PixelPin</span></a>';
+        $connectButton = '<a class="'. $class .'" href="' . $url .'">' . $text . ' <span class="ppsso-logotype">PixelPin</span></a>';
+
+        if(empty($ppssoEnabled)) {
+            $loginButton = '<a class="'. $class .'" href="' . $url .'">Login With <span class="ppsso-logotype">PixelPin</span></a>';
+            $registerButton = '<a class="'. $class .'" href="' . $url .'">Register Using <span class="ppsso-logotype">PixelPin</span></a>';
+        } else {
+            if(empty($ppssoTextEnabled)) {
+                $loginButton = '<a class="'. $class .'" href="' . $url .'"></a>';
+                $registerButton = '<a class="'. $class .'" href="' . $url .'"></a>';
+            } else {
+                $loginButton = '<a class="'. $class .'" href="' . $url .'">' . $ppssoLoginText . ' <span class="ppsso-logotype">PixelPin</span></a>';
+                $registerButton = '<a class="'. $class .'" href="' . $url .'">' . $ppssoRegisterText . ' <span class="ppsso-logotype">PixelPin</span></a>';
+            }
+		}
+		
+		$button = array(
+			'loginButton' => $loginButton,
+            'registerButton' => $registerButton,
+            'checkOutButton' => $checkOutButton,
+            'connectButton' => $connectButton
+		);
+        
+        return $button;
     }
 
 }

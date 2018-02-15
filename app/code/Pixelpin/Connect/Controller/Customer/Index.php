@@ -65,16 +65,16 @@ class Index extends \Magento\Framework\App\Action\Action {
      * @var \Magento\Framework\Message\ManagerInterface
      */
     protected $managerInterface;
+	
+	/**
+     * @var \Magento\Framework\App\Action\Context
+     */
+    protected $_url;
 
     public $resultRedirect;
 
-
-    //public $isCheckout = 'No';
-
     public function __construct(
-        \Magento\Framework\UrlInterface $url,
         \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\Message\ManagerInterface $managerInterface,
         \Magento\Framework\Session\Generic $generic,
         \PixelPin\Connect\Helper\Data $pixelpinConnectHelper,
         \Magento\Customer\Model\Session $customerSession,
@@ -88,7 +88,7 @@ class Index extends \Magento\Framework\App\Action\Action {
         \PixelPin\Connect\Model\Pixelpin\Redirect $redirect
     ) {
         $this->generic = $generic;
-        $this->managerInterface = $managerInterface;
+        $this->managerInterface = $context->getMessageManager();
         $this->pixelpinConnectHelper = $pixelpinConnectHelper;
         $this->customerSession = $customerSession;
         $this->pixelpinConnectPixelpinHelper = $pixelpinConnectPixelpinHelper;
@@ -99,7 +99,7 @@ class Index extends \Magento\Framework\App\Action\Action {
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
         $this->redirect = $redirect;
-        $this->_url = $url;
+        $this->_url = $context->getUrl();
         $this->redirectUri = $this->_url->sessionUrlVar(
                  $this->_url->getUrl(self::REDIRECT_URI_ROUTE)
              ); 
@@ -118,7 +118,7 @@ class Index extends \Magento\Framework\App\Action\Action {
     {
         try {
             $this->_connectCallback();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->managerInterface->addError($e->getMessage());
         }
 
@@ -140,7 +140,7 @@ class Index extends \Magento\Framework\App\Action\Action {
 
         try {
             $this->_disconnectCallback($customer);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->managerInterface->addError($e->getMessage());
         }
 
@@ -370,7 +370,7 @@ class Index extends \Magento\Framework\App\Action\Action {
 
         try{
             $this->connectAction();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->managerInterface->addError($e->getMessage());
         }
 
@@ -388,4 +388,3 @@ class Index extends \Magento\Framework\App\Action\Action {
 			return $resultRedirect;
     }
 }
-?>

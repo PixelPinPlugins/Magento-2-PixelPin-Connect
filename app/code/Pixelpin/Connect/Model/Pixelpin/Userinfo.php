@@ -80,12 +80,8 @@ class Userinfo
 
             try{
                 $this->client->setAccessToken($pixelpinconnectTtoken);
-                $this->userInfo = $this->client->api('userinfo'); 
-
-            }  catch (Pixelpin_Connect_OAuthException $e) {
-                $helper->disconnect($customer);
-                $this->generic->addNotice($e->getMessage());                
-            } catch(Exception $e) {
+                $this->userInfo = $this->client->api('userinfo');               
+            } catch(\Exception $e) {
                 $helper->disconnect($customer);
                 $this->generic->addError($e->getMessage());
             }

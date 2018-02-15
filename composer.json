@@ -1,0 +1,20 @@
+{
+	"name":"pixelpin/pixelpin_connect",
+	"type":"magento2-module",
+	"licence":"OSL-3.0",
+	"version": "1.0.0",
+	"homepage":"http://developer.pixelpin.io/magento2.php",
+	"description":"Pixelpin Connect Uses a slightly modified version of the OAuth 2.0 protocol to be used to authenticate users using PixelPin.",
+	"authors": [
+		{
+			"name":"Callum Brankin",
+			"email": "callum@pixelpin.io"
+		}
+	],
+	"autoload": {
+		"files": ["registration.php"],
+		"psr-4": {
+		  "Magento\\PixelPinConnect\\": ""
+		}
+	}
+}

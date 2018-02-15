@@ -58,35 +58,43 @@ class Client extends \Magento\Framework\DataObject
     protected $_url;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var \Magento\Framework\View\Element\Template\Context
      */
     protected $scopeConfig;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var \Magento\Framework\View\Element\Template\Context
      */
     protected $storeManager;
 
+    /**
+     * @var \Magento\Framework\View\Element\Template\Context
+     */
+    protected $request;
+
     public function __construct(
+        \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\UrlInterface $url,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Store\Model\StoreManagerInterface  $storeManager
     )
-     {
+    {
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
+        $this->request = $request;
 
-         if(($this->isEnabled = $this->_isEnabled())) {
+        if(($this->isEnabled = $this->_isEnabled())) {
              $this->clientId = $this->_getClientId();
              $this->_url = $url;
              $this->clientSecret = $this->_getClientSecret();
              $this->redirectUri = $this->_url->sessionUrlVar(
                  $this->_url->getUrl(self::REDIRECT_URI_ROUTE)
              ); 
-         }
-            if(!empty($params['state'])) {
-                $this->state = $params['state'];
-            }
+        }
+        
+        if(!empty($params['state'])) {
+            $this->state = $params['state'];
+        }
     }
 
     /*
@@ -206,19 +214,18 @@ class Client extends \Magento\Framework\DataObject
     */
     public function fetchAccessToken()
     {
-        if(empty($_REQUEST['code'])) {
+        $code = $this->request->getParam('code');
+        if(empty($code)) {
             throw new \Exception(
                 __('Unable to retrieve access code.')
             );
         }
 
-	    $tempCode = $_REQUEST['code'];
-
         $response = $this->_httpRequest(
             self::OAUTH2_TOKEN_URI,
             'POST',
             array(
-                'code' => $_REQUEST['code'],
+                'code' => $code,
                 'redirect_uri' => $this->redirectUri,
                 'client_id' => $this->clientId,
                 'client_secret' => $this->clientSecret,

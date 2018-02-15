@@ -48,10 +48,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Cms\Helper\Page $cmsPageHelper
     ) {
-        $this->scopeConfig = $scopeConfig;
+        $this->scopeConfig = $context->getScopeConfig();
         $this->cmsPageHelper = $cmsPageHelper;
         parent::__construct(
             $context

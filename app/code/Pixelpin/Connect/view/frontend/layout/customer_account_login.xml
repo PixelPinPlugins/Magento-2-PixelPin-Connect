@@ -8,6 +8,7 @@
         <referenceContainer name="customer.login.container">
         <block class="Pixelpin\Connect\Block\Login" name="pixelpin_connect_login" template="Pixelpin_Connect::login.phtml" cacheable="false">
             <block class="Pixelpin\Connect\Block\Pixelpin\Button" name="pixelpin_connect_login_button" template="Pixelpin_Connect::loginbutton.phtml" cacheable="false"/>
+            <block class="Pixelpin\Connect\Block\Pixelpin\Button" name="pixelpin_connect_register_button" template="Pixelpin_Connect::registerbutton.phtml" cacheable="false"/>
         </block>  
         </referenceContainer>
     </body>

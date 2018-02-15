@@ -46,7 +46,9 @@
                             <div class="buttons-set">
                                 <div>
                                     <p><?php echo __('If you already registered with PixelPin, you can use your PixelPin picture to login to our site.'); ?></p>
+                                    <div class="clearer">
                                     <?php echo $block->getBlockHtml('pixelpin_connect_login_button'); ?>
+                                    </div>
 									<br>
                                 </div>   
                             </div>
@@ -75,14 +77,7 @@
                                 <div>
                                     <p><?php echo __('Not registered? If you have a PixelPin account already, you can register with this website without needing to fill out those time consuming registration forms! If you don\'t have a PixelPin account, sign up to PixelPin using this button too! And use your PixelPin account on other websites in the future.'); ?></p>
                                     <div class="clearer">
-                                        <div class="pixelpin-connect-pixelpin">
-                                            <div class="pixelpin-connect-pixelpin-left">
-                                                
-                                            </div>
-                                            <div class="pixelpin-connect-pixelpin-inner">
-                                                <a href="<?php echo $this->escapeUrl($this->_getButtonUrl()); ?>">Register Using PixelPin</a>
-                                            </div>
-                                        </div>
+                                    <?php echo $block->getBlockHtml('pixelpin_connect_register_button'); ?>
                                     </div>
                                     <br>
                                 </div>   

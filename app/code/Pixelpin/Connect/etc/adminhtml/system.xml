@@ -19,20 +19,70 @@
                 <field id="client_id" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
                     <label>Client ID</label>
                     <depends>
-                        <field id="pixelpinClientID">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                     <validate>required-entry</validate>
                 </field>
                 <field id="client_secret" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="30">
                     <label>Client Secret</label>
                     <depends>
-                        <field id="pixelpinClientSecret">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                     <validate>required-entry</validate>
                 </field>
                 <field id="redirect_url" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                    <frontend_model>PixelPin\Connect\Model\Pixelpin\Redirect</frontend_model>
                    <label>Redirect URI</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+               </field>
+               <field id="ppsso_customise" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="50">
+                    <label>Do you want to customise the way the log in button looks?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+               </field>
+               <field id="ppsso_size" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="60">
+                    <label>Log In Button Size</label>
+                    <source_model>PixelPin\Connect\Model\Pixelpin\PpssoSize</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="ppsso_customise">1</field>
+                    </depends>
+               </field>
+               <field id="ppsso_colour" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="70">
+                    <label>Log In Button Colour</label>
+                    <source_model>PixelPin\Connect\Model\Pixelpin\PpssoColour</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="ppsso_customise">1</field>
+                    </depends>
+               </field>
+               <field id="ppsso_show_text" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="80">
+                    <label>Do you want the button to contain text?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="ppsso_customise">1</field>
+                    </depends>
+               </field>
+               <field id="login_button_text" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
+                    <label>Log In Button Text</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="ppsso_customise">1</field>
+                        <field id="ppsso_show_text">1</field>
+                    </depends>
+               </field>
+               <field id="register_button_text" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="100">
+                    <label>Register Button Text</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="ppsso_customise">1</field>
+                        <field id="ppsso_show_text">1</field>
+                    </depends>
                </field>
             </group>
         </section>

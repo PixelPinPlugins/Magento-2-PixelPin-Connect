@@ -16,4 +16,4 @@ Features
 
 Installation Instructions
 ------------
-Step-by-step Installation instructions can be found on our dedicated developer site.
+Step-by-step Installation instructions can be found on our [dedicated developer site](https://developer.pixelpin.io/magento2.php).

@@ -9,23 +9,20 @@ class Redirect extends \Magento\Config\Block\System\Config\Form\Field
 {
 
     /**
-     * @var \Magento\Framework\UrlInterface
+     * @var \Magento\Backend\Block\Template\Context
      */
 	protected $_url;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var \Magento\Backend\Block\Template\Context
      */
     protected $storeManager;
 
 	public function __construct(
-		\Magento\Backend\Block\Template\Context $context,
-        \Magento\Store\Model\StoreManagerInterface  $storeManager,
-        \Magento\Framework\UrlInterface $url
+		\Magento\Backend\Block\Template\Context $context
     )
     {
-    	$this->_url = $url;
-        $this->storeManager = $storeManager;
+        $this->storeManager = $context->getStoreManager();
     	parent::__construct($context);
     }
 
